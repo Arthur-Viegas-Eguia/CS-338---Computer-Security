@@ -1,0 +1,41 @@
+Arthur Viegas Eguia
+===== DAYTIME =====
+1 - 1  192.168.64.4  129.6.15.29   TCP  [SYN]
+    2  129.6.15.29   192.168.64.4  TCP  [SYN, ACK] 
+    3  192.168.64.4  129.6.15.29   TCP  [SYN]
+2 - 53642
+3 - The source port tells the TCP protocol that certain HTTP request is supposed to go from this 
+specific port in my machine (in this case port 53642), which is the source machine to this other port (in this example 13) in 
+the other machine. 
+The TCP, or transmission control protocol ensures that all packages arrived at a machine
+and that the packages are in order. It arranges for packages to be retransmitted if they do not
+show up in time, or show up corrupted. It reorders the packages so they are in the proper order, and
+throws out duplicates. To do all of that, TCP requires a bunch of book keeping information. 
+One of such information is source port.
+
+4 - 4  129.6.15.29  192.168.64.4 DAYTIME DAYTIME Response
+
+5 - The frame which is left is the Daytime protocol. It contains the type, which is Type: Response
+The message is starts with a new line and is:
+6202 followed by date in the format yy-mm-dd, the time hh:mm:ss followed by 50 0 0 640.9 UTC(NIST) * 
+The message ends with a new line. I suppose th new line is necessary for the date to be properly formatted
+in the terminal. NIST is the source of the information, UTC is the Standart timezone at the prime 
+meridian.
+
+6 - [SYN] is a Synchronization packet. The client sends it when it wants to initiate the communication
+with a server. Along with that, it sends the port the client is running at (which is usually random). It means
+roughly something like "Hey, let's talk."
+The server might answer with its own [SYN] packet, which means "We want to talk in the other direction too, I want
+to reply to you."
+
+7 - [ACK] is an acknowledgement packet. It acknowledges the sequence number it has just received. Informally it means, "Got your message"
+
+8 - [FIN] is a finalize packet. It is used to finalize the communication. At the end one of the parties
+must say I'm done talking. It can be  the client, who does not want to sent any more queries or it can be the 
+server who says I've shown it to you.
+
+9 - The daytime server did. The first FIN package was sent by IP address 129.6.15.29, which is the server. 
+
+===== HTTP =====
+
+1 - 
