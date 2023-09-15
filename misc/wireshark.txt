@@ -6,7 +6,8 @@ Arthur Viegas Eguia
 2 - 53642
 3 - The source port tells the TCP protocol that certain HTTP request is supposed to go from this 
 specific port in my machine (in this case port 53642), which is the source machine to this other port (in this example 13) in 
-the other machine. 
+the other machine. For the same reason  we need a destination port (know which software we are)
+talking to), we need a source port 
 The TCP, or transmission control protocol ensures that all packages arrived at a machine
 and that the packages are in order. It arranges for packages to be retransmitted if they do not
 show up in time, or show up corrupted. It reorders the packages so they are in the proper order, and
