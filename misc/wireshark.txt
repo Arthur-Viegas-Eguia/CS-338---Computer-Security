@@ -54,3 +54,4 @@ I know this is the right package as it was sent from my machine to the server (b
 Is this even legal? If so why/how?
 
 
+How does this relate to Man In the Middle attacks and IP Spoofing (if it is related at all)?
