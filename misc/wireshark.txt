@@ -8,15 +8,11 @@ Arthur Viegas Eguia
 specific port in my machine (in this case port 53642), which is the source machine to this other port (in this example 13) in 
 the other machine. For the same reason  we need a destination port (know which software we are)
 talking to), we need a source port 
-The TCP, or transmission control protocol ensures that all packages arrived at a machine
-and that the packages are in order. It arranges for packages to be retransmitted if they do not
-show up in time, or show up corrupted. It reorders the packages so they are in the proper order, and
-throws out duplicates. To do all of that, TCP requires a bunch of book keeping information. 
-One of such information is source port.
 
 4 - 4  129.6.15.29  192.168.64.4 DAYTIME DAYTIME Response
 
-5 - The frame which is left is the Daytime protocol. It contains the type, which is Type: Response
+5 - The frame which is left is the Daytime protocol. It contains the field type. which is Type: Response
+It also contains the field response, which is the message per se.
 The message is starts with a new line and is:
 6202 followed by date in the format yy-mm-dd, the time hh:mm:ss followed by 50 0 0 640.9 UTC(NIST) * 
 The message ends with a new line. I suppose th new line is necessary for the date to be properly formatted
@@ -32,22 +28,23 @@ to reply to you."
 7 - [ACK] is an acknowledgement packet. It acknowledges the sequence number it has just received. Informally it means, "Got your message"
 
 8 - [FIN] is a finalize packet. It is used to finalize the communication. At the end one of the parties
-must say I'm done talking. It can be  the client, who does not want to sent any more queries or it can be the 
-server who says I've shown it to you.
+must say "I'm done talking." It can be  the client, who does not want to sent any more queries or it can be the 
+server who says "I've shown it to you."
 
 9 - The daytime server did. The first FIN package was sent by IP address 129.6.15.29, which is the server. 
 
 ===== HTTP =====
 
 1 - 2 Connections were initiated. This was a bit weird at first, as it seemed that the computer would only need to request a single connection. 
-But there were two SYN packages sent from my computer and their content seemed to have the same content except for port, stream index, sequence number (raw) which indicates they are different connection. Checksum was different.
+But there were two SYN packages sent from my computer and their content seemed to have the same content except for port, stream index, sequence number (raw) which indicates they are a different connection. Checksum was different too.
 The server also sent two [SYN, ACK] which further confirms my claims.
+I attached screenshots of this in this folder. 
 
-2 - It was requested on package 5, which goes like:
+2 - It was requested on the package which goes like:
 192.168.64.4    45.79.89.123    HTTP    GET /index.html HTTP/1.1
-This is the package as it was sent from my machine to the server, and is get to HTTP. The name of the page also matches. 
+This is the package as it was sent from my machine to the server, and is a GET from HTTP. The name of the page also matches. 
 
-3 - It is on the 11th package which is like:
+3 - It is on the package which goes like:
 192.168.64.4    45.79.89.123    HTTP    GET /jeff_square_head.jpg HTTP/1.1
 I know this is the right package as it was sent from my machine to the server (based on the IP addresses), it was a GET, which indicates it was a request and the name of the item requested is the image
 
