@@ -1,0 +1,202 @@
+Part 1
+Total time: 0.48s
+Number of hashes computed: 267516
+Passwords cracked: 2734
+Time per hash computed:
+I timed the part of the code that did the hashes with the time command
+in Python. So I do have some accurate data. 
+The mean time it took to process a single hash, including 
+data processing was: 9.0480722e-07 s
+The median time it took to calculate each individual hash including
+data processing was: 9.536743164e-07
+The mean time to run the hash function per se, for each individual 
+hash was: 4.144108e-07 s
+The median time to run the hash function per se for each individual
+hash was so small that the time command said it was 0.
+I had all the hashed passwords as keys of a dictionary, so when I
+plugged a user's password on the dictionary
+it returned the plain text version of their password. This is an O(1)
+operation, so the time to crack each password was constant. 
+I also timed this section of the code via the time command.
+Time it took to crack each individual password, including data 
+processing:
+Mean: 1.2847046478874245e-06 s
+Median: 9.5367431e-07 s
+Time it took to crack each individual password, not including data 
+processing (retrieving them from a dictionary):
+Mean: 7.146453929253e-07 s
+Median: 9.5367431e-07 s
+Passwords cracked per number of hash computed: 0.01021994946
+
+I had problems running part 2 in python, the code did not find any of 
+the passwords and my Mac did not let it run for a long time.
+So I decided to write Java code to do so, as Java is faster.
+The following results were computed using Java code:
+
+Part 2:
+Total time: 3228.39 s
+Number of hashes computed: 2576981628
+Passwords cracked: 100
+In a similar way to the previous part, I computed the time to 
+calculate each individual hash using the System.nanoTime() command, 
+which returns the time in nano seconds.
+Mean time it took to calculate each individual 
+hash, including data treating: 0.000001093344841071952 s
+Mean time it took to calculate each individual hash, not including
+data processing: 0.0000003408527558800276 s
+Time per password cracked:  32.28 s
+Passwords cracked per number of hashed computed: 3.88050884e-8
+
+
+For part 3, I couldn't get Java to print the results of the code to a text
+file. So I redirected the standard output from the terminal to the text file, which 
+was used as the output.
+
+Part 3:
+Total Time: 388.83 s
+Number of hashes: 368016265
+Passwords cracked: 2734
+Just like for part 1 and part 2, I used a Java command to time how long
+it takes to hash each individual potential password. I timed two things, how
+long it takes to run the hash function and how long it takes to process the 
+data and then hash. 
+Mean time it took to compute each individual hash, including treating
+the data: 0.0000009013979930669641 s
+Mean time it took to compute each individual hash, not including processing/
+treating data: 0.000000336606853569366 s
+Time per password cracked: 0.14217787337673740145 s 
+Passwords cracked divided by number of hashes computed: 0.00000742901
+
+
+
+Analysis:
+Did your time per hash computed change between phases? By what factor? Why?
+It did change but not significantly. It was more or less constant throughout the
+code. For part 1 it was around 4-7x10^(-7) seconds. For the second part it
+was on the same order of maginitude, around 3-10*10^(-7) seconds, which is slower.
+However, I also changed programming languages, and the implementation of SHA-256
+might be slower in Java than in Python. Part 3 was a around 3-9*10^(-7). Which 
+is the same as part 2. So hashing, is done pretty much in constant time.
+I believe hashing, was done on constant time. The inputs where of more or less
+the same length. This means that
+in all parts the hash was done in more or less the same time. If one input was
+much larger, then  it might have taken longer to hash. But as it was all similar, it was
+constant. Hashing was also pretty fast.
+
+- Did your time per password crack change between phases? By what factor? Why?
+It did. In part 1 each password was cracked in an average of
+1.2847046478874245e-06 seconds, in part 3 each password took around 0.14217787337673740145
+seconds. So part 3 was around 100000 times slower than part 1. The difference
+was between 0.000001 and 0.1 seconds per password (or 100000 times slower). 
+Part 2 was the slowest, it took around 32.28 seconds to compute each password.
+This is 227.039 times slower than part 2, or 22703954 times slower than part 1.
+So it was much much slower.
+In part 1 all hashes were pre computed and saved in a dictionary.
+So for each user, we just needed to plug their password hash as the
+key of the dictionary and the code returned the plain text form of their password.
+Looking up in a dictionary is an O(1) operation on average, so we got each password
+in constant time. The heavy lifting was done by hashing the passwords before.
+In part 3, we had a salt. This way even if two users had the same password, they would
+have a different hash, as each user has their own salt. 
+So, for each user I wanted to crack the password of, I had
+to concatenate their unique salt to one of the passwords on my list, 
+hash it, and test it. On a worst case scenario, their password is the last
+on my list, so I would have to test every single password on my list until I finally
+discovered the correct password. This is an O(N) operation, where n is the
+number of passwords on my list.
+It is posible that I would have to do this for all the users on the system . 
+So for all the users in my system, I might need to compute all hashes on 
+my list. 
+
+Part 2 was worse, each user had a password that was a combination of two words
+from the list. So, for each user I had to crack the password of, on
+the worst case, I would have to check every single possible combination.
+As we have N passwords on the list, I would have to check all N^2 possibilities
+in the worst case. This is an O(N^2) operation.
+This is why this is was so slow. I had to check all
+possible combinations, and N is a large number. Even preprocessing the users
+in the beginning of the code did not make this much faster. 
+
+- Suppose you wanted to precompute all the hashes for each possible password
+so you could just look up the password in a table indexed by the hash. How much
+memory would be required for each phase?
+Part 1:
+there are 267516 words in the password list. Each hash in the dictionary
+contains the key, that is 32 bytes long, a password that is 16 bytes long
+and 32 bytes of overheard. So for a single hash we have 32 + 32 + 16 = 80 bytes
+and there are 267516 possible passwords. So, to precompute every single hash we
+would need 21401280 bytes or 21.40128 megabytes.
+
+Part 2: 
+Each entry in the dictionary has 80 bytes as we have established above (32 bytes
+long key, 16 bytes long password and 32 bytes of overheard). But for 2, instead of
+there being only 267516 words in the password list there were 267516^2 = 71564810256
+words in the password list. So, we would need 71564810256 * 80 = 5.7251848e+12 bytes
+or 5725.1848 gigabytes of memory.
+
+Part 3:
+This is impossible. Each user has a (hopefully) unique salt that we
+need to concatenate to the beginning of the password. We would need to compute
+all the passwords from this list with each user's unique salt and save it on the dictionary.
+But we wouldn't be able to use it for another user, as they would have a different salt.
+Suppose we tried to account for all possible salt numbers. We have that the salt is a
+8 digit hex number. So there are 16^8 possible salts. Assume each will produce
+a unique hash. Given a 24 bit password, we have calculated on 1, that to hash all passwords
+of the list we would need 21401280 bytes. As each unique salt would change the hash (but will not
+modify length of password or length of hash) we would need 21401280 bytes per
+salt or 16^8 * 21401280 = 9.1917798e+16 bytes or 91917 terabytes of memory.
+
+
+Give 3-4 reasons we should store password hashes and not the passwords themselves.
+Think in terms of threats, who the attackers might be, etc.
+Protect against inside threats. Suppose Mal works at Bob.com and wants to steal
+data from its costumers, or do something bad with their accounts. If the passwords
+are in stored in plain text he can easily read them and log in (and do whatever he pleases).
+If they are hashed he will need to crack them, and that takes a while, and if they have protection
+like salt it might take a long time.
+
+Suppose there is a bug in the system of bob.com and engineers are trying to fix it.
+The bug involves users accounts and passwords. If the passwords aren't hashed the 
+engineers could read them and enter someone's account, which is bad. If they are hashed
+cracking passwords would take a long time.
+
+Imagine if data from bob.com is leaked, and is readily available online. If passwords are in
+plain text, anyone can steal any of the accounts, which is bad. If they are hashed it will be
+harder to crack people's passwords. It is still bad, as cracking passwords is possible,
+and many passwords are vulnerable (password123). But hashing is an extra layer of security. If your password is
+strong, it is less likely to have your account stolen, and if the system uses salt, it might be
+even harder to hack into your account.
+
+Imagine a hacker got remote access to the database of bob.com. if the passwords in the database were in
+plain text, then it would be very easy to steal any of the accounts. If the passwords are hashed, the hacker
+would hae to crack them, and it takes a long time to do so for systems which have good security.
+
+This is an argument for hashing and salting. Suppose a hacker has remote access to Bob's database. Even if it is
+hashed, he can easily compute the hashes of most common passwords and steal some accounts. By stealing one account
+where the password is password123 he can easily steal all accounts that have the same password, without computing the hash again.
+If there is hashing and salting, even if two people have the same password, someone would need to do all computations
+again to crack their password. This takes longer
+
+I used external research for this assignment.
+Sources:
+https://www.w3schools.com/java/java_files_read.asp
+https://stackoverflow.com/questions/3481828/how-do-i-split-a-string-in-java
+https://www.w3schools.com/java/java_hashmap.asp
+https://stackoverflow.com/questions/180158/how-do-i-time-a-methods-execution-in-java
+https://www.geeksforgeeks.org/sha-256-hash-in-java/#
+https://stackoverflow.com/questions/5531455/how-to-hash-some-string-with-sha-256-in-java
+https://www.w3docs.com/snippets/java/how-to-hash-some-string-with-sha-256-in-java.html
+https://www.w3schools.com/java/ref_string_tolowercase.asp
+https://www.geeksforgeeks.org/hashmap-containskey-method-in-java/
+https://stackoverflow.com/questions/3724830/conversion-from-long-to-double-in-java
+https://www.google.com/search?q=convert+nanoseconds+to+seconds&oq=convert+nanosecon&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBwgBEAAYgAQyBggCEEUYOTIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDM4NjVqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8
+https://www.w3schools.com/java/java_files_create.asp
+https://www.geeksforgeeks.org/python-time-time-method/
+https://docs.oracle.com/javase/7/docs/api/java/math/BigInteger.html
+https://stackoverflow.com/questions/508630/java-equivalent-of-unsigned-long-long
+https://stackoverflow.com/questions/4503656/java-removing-first-character-of-a-string
+https://www.google.com/search?q=convert+bytes+to+mb&oq=convert+bytes+to&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDQ0NjZqMWo3qAIAsAIA&sourceid=chrome&ie=UTF-8
+
+
+
+
